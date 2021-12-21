@@ -2,26 +2,15 @@ import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Locale;
-import java.util.Scanner;
-
+import java.util.*;
 
 
 @SuppressWarnings("serial")
 public class miasta extends JPanel {
-    public static String version = "1.3";
     public static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) throws IOException {
         initialize();
@@ -29,32 +18,40 @@ public class miasta extends JPanel {
             public void run() {
                 try {
                     createAndShowGui1();
-                    window2.createAndShowGui2();
                 }
                 catch(IOException e){}
             }
         });
-        if(version_compare()) System.out.println("Dostępna jest nowsza wersja pobierz ją tutaj: https://page.atcat.repl.co/program_downloads/gra_miasta");
         while(true){
-            int wiersz=0;
-            int kolumna=0;
-            int kod=1000;
-            System.out.println("d - dalej / s - zapis / e - wyjście / l - wczytaj / z - zmień chunk");
+            int kod=0;
+            System.out.println("d - dalej / s - zapis / e - wyjście / l - wczytaj / z - zmień chunk / f - wypełnij");
             String opcja = scanner.nextLine().toLowerCase(Locale.ROOT);
             if(opcja.equals("d")) {
                 try {
                     System.out.print("wiersz: ");
-                    wiersz = scanner.nextInt();
+                    String[] wiersze = scanner.nextLine().split("/");
                     System.out.print("kolumna: ");
-                    kolumna = scanner.nextInt();
+                    String[] kolumny = scanner.nextLine().split("/");
                     System.out.print("kod: ");
                     kod = scanner.nextInt();
                     scanner.nextLine();
+                    if(wiersze.length > kolumny.length){
+                        for(String x : wiersze){
+                            map.gameMAP[Integer.valueOf(x)][Integer.valueOf(kolumny[0])] = kod;
+                        }
+                    }
+                    else if(kolumny.length > wiersze.length){
+                        for(String x : kolumny){
+                            map.gameMAP[Integer.valueOf(x)][Integer.valueOf(wiersze[0])] = kod;
+                        }
+                    }
+                    else{
+                        if (Integer.valueOf(wiersze[0]) > 0 && Integer.valueOf(kolumny[0]) > 0) {
+                            map.gameMAP[Integer.valueOf(wiersze[0])][Integer.valueOf(kolumny[0])] = kod;
+                        }
+                    }
                 } catch (InputMismatchException e) {
                     System.out.println("Musi być liczbą");
-                }
-                if (wiersz > 0 && kolumna > 0) {
-                    map.gameMAP[wiersz][kolumna] = kod;
                 }
             }
             else if(opcja.equals("s")){
@@ -95,52 +92,40 @@ public class miasta extends JPanel {
                 map.load();
                 reloadmap();
             }
-
-            try {
-                miasta mainPanel = new miasta();
-                mapframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                mapframe.getContentPane().add(mainPanel);
-                mapframe.pack();
-                mapframe.setLocationByPlatform(true);
-                mapframe.setVisible(true);
+            else if(opcja.equals("f")){
+                System.out.print("wiersz startowy: ");
+                int wierszStart = scanner.nextInt();
+                System.out.print("kolumna startowa: ");
+                int kolumnyStart = scanner.nextInt();
+                System.out.print("wiersz końcowy: ");
+                int wierszEnd = scanner.nextInt();
+                System.out.print("kolumna końcowa: ");
+                int kolumnyEnd = scanner.nextInt();
+                System.out.print("kod: ");
+                kod = scanner.nextInt();
+                scanner.nextLine();
+                if(wierszStart>0&&wierszEnd>0&&kolumnyStart>0&&kolumnyEnd>0) {
+                    for (int y = wierszStart; y <= wierszEnd; y++) {
+                        for (int x = kolumnyStart; x <= kolumnyEnd; x++) {
+                            map.gameMAP[y][x] = kod;
+                        }
+                    }
+                }
             }
-            catch(IllegalComponentStateException e){}
+
+            reloadmap();
         }
     }
 
-    public static boolean version_compare(){
-        try{
-            URL url = new URL("https://page.atcat.repl.co/program_downloads/gra_miasta/lastest_version");
 
-            URLConnection urlCon = url.openConnection();
-            BufferedReader read = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
-            String ver = read.readLine();
-            read.close();
-
-            if(ver.equals(version)){
-                return false;
-            }
-            else {
-                return true;
-            }
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     public static void reloadmap(){
         try {
-            miasta mainPanel = new miasta();
-            mapframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            mapframe.getContentPane().add(mainPanel);
-            mapframe.pack();
-            mapframe.setLocationByPlatform(true);
-            mapframe.setVisible(true);
+            renderMap();
+            mapPanel.revalidate();
+            mapPanel.repaint();
         }
-        catch(IllegalComponentStateException e){} catch (IOException e) {}
+        catch (IOException e) { }
     }
 
     public static AffineTransform tx = new AffineTransform();
@@ -155,8 +140,8 @@ public class miasta extends JPanel {
 
         textures.put(100,"props\\tree.png");
 
-        textures.put(41,"roads\\road1.png");
-        textures.put(42,"roads\\road2.png");
+        textures.put(41,"roads\\road1_0.png");
+        textures.put(42,"roads\\road2_0.png");
         textures.put(51,"roads\\road_crossing_3_1.png");
         textures.put(52,"roads\\road_crossing_3_2.png");
         textures.put(53,"roads\\road_crossing_3_3.png");
@@ -210,12 +195,37 @@ public class miasta extends JPanel {
         textures.put(1014,"text\\14.png");
         textures.put(1015,"text\\15.png");
         textures.put(1016,"text\\16.png");
-}
+    }
+    public static Random random = new Random();
 
-    private JLabel[][] labelGrid = new JLabel[map.gameMAP.length][map.gameMAP[0].length];
+    public static Image GetTexture(int id)  throws IOException {
+        if(id==41){
+            return ImageIO.read(new File("textures\\roads\\road1_" + random.nextInt(5) + ".png"));
+        }
+        else if(id==42){
+            return ImageIO.read(new File("textures\\roads\\road2_" + random.nextInt(5) + ".png"));
+        }
+        else {
+            return ImageIO.read(new File("textures\\" + textures.get(id)));
+        }
+    }
 
-    public miasta() throws IOException {
-        setLayout(new GridLayout(map.gameMAP.length, map.gameMAP[0].length));
+    private static JLabel[][] labelGrid = new JLabel[map.gameMAP.length][map.gameMAP[0].length];
+
+    public static void renderMap() throws IOException {
+        mapPanel.setLayout(new GridLayout(map.gameMAP.length, map.gameMAP[0].length));
+        for (int r = 0; r < labelGrid.length; r++) {
+            for (int c = 0; c < labelGrid[r].length; c++) {
+                try {
+                    labelGrid[r][c].setIcon(new ImageIcon(GetTexture(map.gameMAP[r][c])));
+                }
+                catch(NullPointerException e){labelGrid[r][c].setIcon(new ImageIcon(error_texture()));}
+                catch(IIOException f){labelGrid[r][c].setIcon(new ImageIcon(error_texture()));}
+            }
+        }
+    }
+    public static void InitMap() throws IOException {
+        mapPanel.setLayout(new GridLayout(map.gameMAP.length, map.gameMAP[0].length));
         for (int r = 0; r < labelGrid.length; r++) {
             for (int c = 0; c < labelGrid[r].length; c++) {
                 labelGrid[r][c] = new JLabel();
@@ -224,25 +234,7 @@ public class miasta extends JPanel {
                 }
                 catch(NullPointerException e){labelGrid[r][c].setIcon(new ImageIcon(error_texture()));}
                 catch(IIOException f){labelGrid[r][c].setIcon(new ImageIcon(error_texture()));}
-                add(labelGrid[r][c]);
-            }
-        }
-        addMouseListener(new MyMouseListener());
-    }
-    public static int publicrow;
-    public static int publiccol;
-
-    private class MyMouseListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent mEvt) {
-            Component comp = getComponentAt(mEvt.getPoint());
-            for (int row = 0; row < labelGrid.length; row++) {
-                for (int col = 0; col < labelGrid[row].length; col++) {
-                    if (labelGrid[row][col] == comp) {
-                        publicrow = row;
-                        publiccol = col;
-                    }
-                }
+                mapPanel.add(labelGrid[r][c]);
             }
         }
     }
@@ -257,14 +249,22 @@ public class miasta extends JPanel {
         }
     }
 
-    public static JFrame mapframe = new JFrame("mapa");
-    private static void createAndShowGui1() throws IOException {
-        miasta mainPanel = new miasta();
+    public static JPanel mapPanel = new JPanel();
 
-        mapframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mapframe.getContentPane().add(mainPanel);
-        mapframe.pack();
-        mapframe.setLocationByPlatform(true);
-        mapframe.setVisible(true);
+    public static JPanel mainPanel = new JPanel();
+    public static JFrame frame = new JFrame("Miasta");
+    private static void createAndShowGui1() throws IOException {
+        InitMap();
+        window2.renderId();
+
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainPanel.add(mapPanel);
+        mainPanel.add(window2.idPanel);
+        frame.add(mainPanel);
+        frame.pack();
+        frame.setResizable(false);
+        frame.setLocationByPlatform(true);
+        frame.setVisible(true);
     }
 }

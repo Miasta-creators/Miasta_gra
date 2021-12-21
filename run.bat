@@ -1,1 +1,2 @@
-java -jar miasta.jar
+echo start
+java game_runner.java
