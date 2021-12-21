@@ -60,6 +60,10 @@ public class game_runner {
             BufferedReader read = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
             String info = read.readLine();
             read.close();
+            version = info;
+            File f = new File("version.bin");
+            PrintWriter zapis = new PrintWriter(f);
+            zapis.print(version);
 
             if(info.toLowerCase(Locale.ROOT).equals("jar")) {
                 System.out.println("Pobieranie...");
@@ -84,12 +88,8 @@ public class game_runner {
                 else{
                     file.renameTo(file2);
                 }
-                version = info;
-                File f = new File("version.bin");
-                PrintWriter zapis = new PrintWriter(f);
-                zapis.print(version);
             }
-            else if(info.equals("texture+jar")){
+            else {
                 System.out.println("Pobieranie...");
                 try{
                     InputStream in = new URL("https://github.com/ATcat-pl/Miasta_gra/raw/main/miasta.exe").openStream();
@@ -98,12 +98,8 @@ public class game_runner {
                 catch (IOException e) {
                     System.out.println("ERROR While downloading updates ");
                 }
-                version = info;
-                File f = new File("version.bin");
-                PrintWriter zapis = new PrintWriter(f);
-                zapis.print(version);
-                RUNinstall_exe();
             }
+            RUNinstall_exe();
         }
         catch (Exception e){
             e.printStackTrace();
