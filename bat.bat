@@ -1,1 +1,0 @@
-java -jar miasta.jar

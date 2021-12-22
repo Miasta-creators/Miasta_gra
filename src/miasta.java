@@ -2,121 +2,151 @@ import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 
 @SuppressWarnings("serial")
 public class miasta extends JPanel {
+    private static JFrame starting = new JFrame("Miasta");
+    public static JFrame errorWindow = new JFrame("ERROR");
+    public static String version;
     public static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) throws IOException {
+        try {
+            JarFile jar = new JarFile("miasta.jar");
+            JarEntry entry = (JarEntry) jar.getEntry("version.bin");
+            InputStream input = jar.getInputStream(entry);
+            Scanner odczyt = new Scanner(input);
+            starting.add(new JLabel("Loading data"));
+            starting.pack();
+            starting.setResizable(false);
+            starting.setLocationByPlatform(true);
+            starting.setVisible(true);
+            try {
+                version = odczyt.nextLine();
+                if (version_compare()) {
+                    starting.dispatchEvent(new WindowEvent(starting, WindowEvent.WINDOW_CLOSING));
+                    JFrame Update = new JFrame("Update available");
+                    JPanel UpdatePanel = new JPanel();
+                    UpdatePanel.setLayout(new BoxLayout(UpdatePanel, BoxLayout.Y_AXIS));
+                    JPanel BtnPanel = new JPanel();
+                    JPanel TextPanel = new JPanel();
+                    BtnPanel.setLayout(new GridLayout(1, 2));
+                    JLabel label = new JLabel("Update available. Do you want to update?");
+                    TextPanel.add(label);
+                    JButton CancelBtn = new JButton("No");
+                    JButton Btn = new JButton("Yes");
+                    Btn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            label.setText("Downloading...");
+                            Btn.hide();
+                            CancelBtn.hide();
+                            try {
+                                InputStream in = new URL("https://github.com/ATcat-pl/Miasta_gra/raw/main/miasta.exe").openStream();
+                                Files.copy(in, Paths.get("update.exe"), StandardCopyOption.REPLACE_EXISTING);
+                                label.setText("Finished, run 'update.exe' to update");
+                            } catch (IOException f) {
+                                errorWindow.add(new JLabel("ERROR While downloading update"));
+                                errorWindow.setVisible(true);
+                            }
+                        }
+                    });
+                    CancelBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            Update.dispatchEvent(new WindowEvent(Update, WindowEvent.WINDOW_CLOSING));
+                            start();
+                        }
+                    });
+                    BtnPanel.add(Btn);
+                    BtnPanel.add(CancelBtn);
+                    UpdatePanel.add(TextPanel);
+                    UpdatePanel.add(BtnPanel);
+                    Update.add(UpdatePanel);
+                    Update.pack();
+                    Update.setResizable(false);
+                    Update.setLocationByPlatform(true);
+                    Update.setVisible(true);
+                } else {
+                    start();
+                }
+            } catch (NoSuchElementException e) {
+                odczyt.close();
+                JFrame StartupError = new JFrame("Startup error");
+                JPanel Error = new JPanel();
+                Error.setLayout(new GridLayout(2, 1));
+                Error.add(new JLabel("Startup error occurred version read fail, reinstall game."));
+                JButton Btn = new JButton("EXIT");
+                Btn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.exit(566);
+                    }
+                });
+                Error.add(Btn);
+                StartupError.add(Error);
+                StartupError.setSize(new Dimension(200, 100));
+                StartupError.setResizable(false);
+                StartupError.setLocationByPlatform(true);
+                StartupError.setVisible(true);
+
+            }
+        }
+        catch(NoSuchFileException e){start();}
+    }
+    public static void start(){
+        starting.setVisible(true);
         initialize();
+        lang.loadLang();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
                     createAndShowGui1();
                 }
-                catch(IOException e){}
+                catch(IOException e){starting.dispatchEvent(new WindowEvent(starting, WindowEvent.WINDOW_CLOSING));}
             }
         });
-        while(true){
-            int kod=0;
-            System.out.println("d - dalej / s - zapis / e - wyjście / l - wczytaj / z - zmień chunk / f - wypełnij");
-            String opcja = scanner.nextLine().toLowerCase(Locale.ROOT);
-            if(opcja.equals("d")) {
-                try {
-                    System.out.print("wiersz: ");
-                    String[] wiersze = scanner.nextLine().split("/");
-                    System.out.print("kolumna: ");
-                    String[] kolumny = scanner.nextLine().split("/");
-                    System.out.print("kod: ");
-                    kod = scanner.nextInt();
-                    scanner.nextLine();
-                    if(wiersze.length > kolumny.length){
-                        for(String x : wiersze){
-                            map.gameMAP[Integer.valueOf(x)][Integer.valueOf(kolumny[0])] = kod;
-                        }
-                    }
-                    else if(kolumny.length > wiersze.length){
-                        for(String x : kolumny){
-                            map.gameMAP[Integer.valueOf(x)][Integer.valueOf(wiersze[0])] = kod;
-                        }
-                    }
-                    else{
-                        if (Integer.valueOf(wiersze[0]) > 0 && Integer.valueOf(kolumny[0]) > 0) {
-                            map.gameMAP[Integer.valueOf(wiersze[0])][Integer.valueOf(kolumny[0])] = kod;
-                        }
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Musi być liczbą");
-                }
-            }
-            else if(opcja.equals("s")){
-                System.out.print("Nazwa mapy: ");
-                map.path = scanner.nextLine();
-                map.save();
-            }
-            else if(opcja.equals("e")){
-                System.exit(0);
-            }
-            else if(opcja.equals("l")){
-                map.chunk_x = 0;
-                map.chunk_y = 0;
-                System.out.print("Nazwa mapy: ");
-                map.path = scanner.nextLine();
-                map.load();
-                reloadmap();
-            }
-            else if(opcja.equals("z")){
-                System.out.println("w - UP / s - DOWN / a - LEFT / d - RIGHT");
-                opcja = scanner.nextLine().toLowerCase(Locale.ROOT);
-                if(opcja.equals("w")){
-                    map.save();
-                    map.chunk_y++;
-                }
-                else if(opcja.equals("s")){
-                    map.save();
-                    map.chunk_y--;
-                }
-                else if(opcja.equals("a")){
-                    map.save();
-                    map.chunk_x--;
-                }
-                else if(opcja.equals("d")){
-                    map.save();
-                    map.chunk_x++;
-                }
-                map.load();
-                reloadmap();
-            }
-            else if(opcja.equals("f")){
-                System.out.print("wiersz startowy: ");
-                int wierszStart = scanner.nextInt();
-                System.out.print("kolumna startowa: ");
-                int kolumnyStart = scanner.nextInt();
-                System.out.print("wiersz końcowy: ");
-                int wierszEnd = scanner.nextInt();
-                System.out.print("kolumna końcowa: ");
-                int kolumnyEnd = scanner.nextInt();
-                System.out.print("kod: ");
-                kod = scanner.nextInt();
-                scanner.nextLine();
-                if(wierszStart>0&&wierszEnd>0&&kolumnyStart>0&&kolumnyEnd>0) {
-                    for (int y = wierszStart; y <= wierszEnd; y++) {
-                        for (int x = kolumnyStart; x <= kolumnyEnd; x++) {
-                            map.gameMAP[y][x] = kod;
-                        }
-                    }
-                }
-            }
-
-            reloadmap();
-        }
     }
+    public static boolean version_compare(){
+        try{
+            URL url = new URL("https://page.atcat.repl.co/program_downloads/gra_miasta/lastest_version");
 
+            URLConnection urlCon = url.openConnection();
+            BufferedReader read = new BufferedReader(new InputStreamReader(urlCon.getInputStream()));
+            String ver = read.readLine();
+            read.close();
+
+            if(ver.equals(version)){
+                return false;
+            }
+            else {
+                return true;
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
     public static void reloadmap(){
@@ -195,6 +225,11 @@ public class miasta extends JPanel {
         textures.put(1014,"text\\14.png");
         textures.put(1015,"text\\15.png");
         textures.put(1016,"text\\16.png");
+
+        textures.put(2000, "special\\arrow_up.png");
+        textures.put(2001, "special\\arrow_right.png");
+        textures.put(2002, "special\\arrow_down.png");
+        textures.put(2003, "special\\arrow_left.png");
     }
     public static Random random = new Random();
 
@@ -244,27 +279,32 @@ public class miasta extends JPanel {
             return ImageIO.read(new File("textures\\error.png"));
         }
         catch (IOException e) {
-            System.out.println("ERROR Trying again");
             return error_texture();
         }
     }
 
     public static JPanel mapPanel = new JPanel();
 
-    public static JPanel mainPanel = new JPanel();
-    public static JFrame frame = new JFrame("Miasta");
+    public static JPanel framePanel = new JPanel();
+    public static JFrame window = new JFrame("Miasta");
+    public static JPanel frame = new JPanel();
     private static void createAndShowGui1() throws IOException {
         InitMap();
-        window2.renderId();
+        idPanel.renderId();
+        inputPanel.initialize();
 
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainPanel.add(mapPanel);
-        mainPanel.add(window2.idPanel);
-        frame.add(mainPanel);
-        frame.pack();
-        frame.setResizable(false);
-        frame.setLocationByPlatform(true);
-        frame.setVisible(true);
+        framePanel.setLayout(new BoxLayout(framePanel, BoxLayout.X_AXIS));
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BoxLayout(frame, BoxLayout.Y_AXIS));
+        framePanel.add(mapPanel);
+        framePanel.add(idPanel.idPanel);
+        frame.add(framePanel);
+        frame.add(inputPanel.mainPanel);
+        window.add(frame);
+        window.pack();
+        starting.dispatchEvent(new WindowEvent(starting, WindowEvent.WINDOW_CLOSING));
+        window.setResizable(false);
+        window.setLocationByPlatform(true);
+        window.setVisible(true);
     }
 }

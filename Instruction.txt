@@ -1,0 +1,5 @@
+To run the game open miasta.jar file
+To set language go to lang folder and open file 'setLang.txt' and write in it name of the file with your language.
+
+In game:
+- To create new map with random world generation before your map name add 'noise;' and click 'load'

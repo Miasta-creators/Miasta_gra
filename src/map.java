@@ -1,9 +1,14 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.Random;
 import java.util.Scanner;
 
 public class map {
 
+    public static Scanner scanner = new Scanner(System.in);
     public static Random random = new Random();
     private static final byte[] BUFFER = new byte[4096 * 1024];
 
@@ -52,7 +57,6 @@ public class map {
         }
         zapis.close();
 
-
     }
     public static void load() {
         if (path.equals("null")) {
@@ -85,7 +89,29 @@ public class map {
                 }
             }
             path = String.valueOf(random.nextInt());
-        } else {
+        }
+        else if(path.equals("random")){
+            for (int j = 0; j < gameMAP.length - 1; j++) {
+                for (int x = 0; x < gameMAP[j].length - 1; x++) {
+                    while (true) {
+                        int var = random.nextInt(4);
+                        if(var==3)var=100;
+                        if (miasta.textures.containsKey(var)) {
+                            map.gameMAP[j + 1][x + 1] = var;
+                            break;
+                        }
+                    }
+                }
+            }
+            path = String.valueOf(random.nextInt());
+        }
+        else if(path.split(";")[0].equals("noise")){
+            try {
+                noise.mapRender();
+                map.load();
+            } catch (FileNotFoundException e) { }
+        }
+        else {
             try {
                 Scanner odczyt = new Scanner(new File("saves\\" + path + "\\" + chunk_x + "," + chunk_y + ".citymap"));
                 String line = odczyt.nextLine();
@@ -97,13 +123,21 @@ public class map {
                     }
                 }
             } catch (FileNotFoundException e) {
-                System.out.println("Mapa nie istnieje");
+                miasta.errorWindow.add(new JLabel("Mapa nie istnieje"));
+                JButton Btn = new JButton("OK");
+                Btn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        miasta.errorWindow.dispatchEvent(new WindowEvent(miasta.errorWindow, WindowEvent.WINDOW_CLOSING));
+                    }
+                });
+                miasta.errorWindow.setVisible(true);
                 for (int j = 0; j < gameMAP.length - 1; j++) {
                     for (int x = 0; x < gameMAP[j].length - 1; x++) {
                         map.gameMAP[j + 1][x + 1] = 0;
                     }
                 }
             }
-            }
         }
+    }
 }

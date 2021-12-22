@@ -1,0 +1,2 @@
+Delte file game_runner.java
+and then run 'setup.exe'
