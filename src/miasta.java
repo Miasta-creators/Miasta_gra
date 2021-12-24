@@ -60,7 +60,7 @@ public class miasta extends JPanel {
                             Btn.hide();
                             CancelBtn.hide();
                             try {
-                                InputStream in = new URL("https://github.com/ATcat-pl/Miasta_gra/raw/main/miasta.exe").openStream();
+                                InputStream in = new URL("https://github.com/Miasta-creators/Miasta_gra/raw/main/miasta.exe").openStream();
                                 Files.copy(in, Paths.get("update.exe"), StandardCopyOption.REPLACE_EXISTING);
                                 label.setText("Finished, run 'update.exe' to update");
                             } catch (IOException f) {
@@ -194,6 +194,32 @@ public class miasta extends JPanel {
         textures.put(93,"roads\\path_turn_3.png");
         textures.put(94,"roads\\path_turn_4.png");
 
+        textures.put(200, "train\\platforms\\platform1.png");
+        textures.put(201, "train\\platforms\\platform2.png");
+        textures.put(202, "train\\platforms\\platform3.png");
+        textures.put(203, "train\\platforms\\platform4.png");
+        textures.put(204, "train\\platforms\\platform_corner_1.png");
+        textures.put(205, "train\\platforms\\platform_corner_2.png");
+        textures.put(206, "train\\platforms\\platform_corner_3.png");
+        textures.put(207, "train\\platforms\\platform_corner_4.png");
+        textures.put(208, "train\\platforms\\platform_double_1.png");
+        textures.put(209, "train\\platforms\\platform_double_2.png");
+        textures.put(210, "train\\platforms\\platform_end_1.png");
+        textures.put(211, "train\\platforms\\platform_end_2.png");
+        textures.put(212, "train\\platforms\\platform_end_3.png");
+        textures.put(213, "train\\platforms\\platform_end_4.png");
+
+        textures.put(220, "train\\rails\\rail1_1.png");
+        textures.put(221, "train\\rails\\rail1_2.png");
+        textures.put(222, "train\\rails\\rail1_turn_1.png");
+        textures.put(223, "train\\rails\\rail1_turn_2.png");
+        textures.put(224, "train\\rails\\rail1_turn_3.png");
+        textures.put(225, "train\\rails\\rail1_turn_4.png");
+        textures.put(226, "train\\rails\\rail1_crossing_3_1.png");
+        textures.put(227, "train\\rails\\rail1_crossing_3_2.png");
+        textures.put(228, "train\\rails\\rail1_crossing_3_3.png");
+        textures.put(229, "train\\rails\\rail1_crossing_3_4.png");
+
         textures.put(600,"buildings\\block_top.png");
         textures.put(601,"buildings\\block_corner_1.png");
         textures.put(602,"buildings\\block_corner_2.png");
@@ -205,6 +231,10 @@ public class miasta extends JPanel {
         textures.put(614,"buildings\\block_side_4.png");
         textures.put(631,"buildings\\block_2side_1.png");
         textures.put(632,"buildings\\block_2side_2.png");
+        textures.put(633,"buildings\\block_end_1.png");
+        textures.put(634,"buildings\\block_end_2.png");
+        textures.put(635,"buildings\\block_end_3.png");
+        textures.put(636,"buildings\\block_end_4.png");
         textures.put(640,"buildings\\house1.png");
         textures.put(641,"buildings\\house2.png");
 

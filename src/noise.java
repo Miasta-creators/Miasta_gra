@@ -36,7 +36,6 @@ public class noise {
         File f1 = new File("saves\\" + map.path);
         f1.mkdir();
 
-        int lastID = 0;
         for(int chunk_y=0; chunk_y<17; chunk_y++) {
             for(int chunk_x=0; chunk_x<17; chunk_x++) {
                 int x = chunk_x-8;
@@ -49,31 +48,23 @@ public class noise {
                             int chunk_x16 = chunk_x * 16;
                             int chunk_y16 = chunk_y * 16;
                             if (result[chunk_x16 + i][chunk_y16 + j] < 0.5) {
-                                if(lastID==0){
-                                    zapis.print(1 + ",");
-                                    lastID = 1;
-                                }
-                                else {
-                                    zapis.print(2 + ",");
-                                    lastID = 2;
-                                }
+                                zapis.print(2 + ",");
                             }
                             else if (result[chunk_x16 + i][chunk_y16 + j] < 0.8 && result[chunk_x16 + i][chunk_y16 + j] > 0.4) {
-                                if(lastID==2){
+                                if(result[chunk_x16 + i][chunk_y16 + j - 1] < 0.5){
                                     zapis.print(1 + ",");
-                                    lastID = 1;
+                                }
+                                else if(result[chunk_x16 + i][chunk_y16 + j + 1] < 0.5){
+                                    zapis.print(1 + ",");
                                 }
                                 else if (result[chunk_x16 + i - 1][chunk_y16 + j] < 0.5) {
                                     zapis.print(1 + ",");
-                                    lastID = 1;
                                 }
                                 else if (result[chunk_x16 + i + 1][chunk_y16 + j] < 0.5) {
                                     zapis.print(1 + ",");
-                                    lastID = 1;
                                 }
                                 else {
                                     zapis.print(0 + ",");
-                                    lastID = 0;
                                 }
                             }
                             else zapis.print(3 + ",");
