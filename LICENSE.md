@@ -1,3 +1,5 @@
+Copyright (c) Miasta-creators and ATcat-pl 2021.
+
 pl
 LICENCJA
 
