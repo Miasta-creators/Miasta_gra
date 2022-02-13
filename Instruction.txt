@@ -10,3 +10,4 @@ P - place tile (set code and place)
 Arrow keys - move cursor/select frame
 WASD - change chunk
 Enter - place last set tile
+PgUp, PgDown - change id list pages
