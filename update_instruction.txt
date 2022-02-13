@@ -1,2 +1,2 @@
-Delte file game_runner.java
-and then run 'setup.exe'
+delete "lang" directory
+run 'setup.exe'

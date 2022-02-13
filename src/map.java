@@ -1,7 +1,3 @@
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.Random;
 import java.util.Scanner;
@@ -96,7 +92,7 @@ public class map {
                     while (true) {
                         int var = random.nextInt(4);
                         if(var==3)var=100;
-                        if (miasta.textures.containsKey(var)) {
+                        if (textures.texture.containsKey(var)) {
                             map.gameMAP[j + 1][x + 1] = var;
                             break;
                         }
@@ -123,15 +119,7 @@ public class map {
                     }
                 }
             } catch (FileNotFoundException e) {
-                miasta.errorWindow.add(new JLabel("Mapa nie istnieje"));
-                JButton Btn = new JButton("OK");
-                Btn.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        miasta.errorWindow.dispatchEvent(new WindowEvent(miasta.errorWindow, WindowEvent.WINDOW_CLOSING));
-                    }
-                });
-                miasta.errorWindow.setVisible(true);
+                System.out.println("Mapa nie istnieje");
                 for (int j = 0; j < gameMAP.length - 1; j++) {
                     for (int x = 0; x < gameMAP[j].length - 1; x++) {
                         map.gameMAP[j + 1][x + 1] = 0;

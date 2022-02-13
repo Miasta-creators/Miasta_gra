@@ -3,3 +3,10 @@ To set language go to lang folder and open file 'setLang.txt' and write in it na
 
 In game:
 - To create new map with random world generation before your map name add 'noise;' and click 'load'
+
+Keyboard:
+Esc - menu (save, load, exit)
+P - place tile (set code and place)
+Arrow keys - move cursor/select frame
+WASD - change chunk
+Enter - place last set tile
