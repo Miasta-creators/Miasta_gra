@@ -14,7 +14,7 @@ import java.awt.Graphics2D;
 
 public class main extends JPanel {
 
-    public static String version = "1.6";
+    public static String version = "v1.6";
 
     private static String path = "";
     public static Scanner scanner = new Scanner(System.in);

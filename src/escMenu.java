@@ -26,7 +26,7 @@ public class escMenu {
         else if (key_code == KeyEvent.VK_ENTER) {
             if(select==0){
                 map.path = "";
-                main.x_text_pos = 0;
+                main.x_text_pos = 43;
                 main.Esc_menu =false;
                 screen.reset_foreground();
                 Graphics2D g2d = screen.foreground.createGraphics();
@@ -41,7 +41,7 @@ public class escMenu {
             }
             else if(select==1){
                 map.path = "";
-                main.x_text_pos = 0;
+                main.x_text_pos = 43;
                 main.Esc_menu =false;
                 screen.reset_foreground();
                 Graphics2D g2d = screen.foreground.createGraphics();
