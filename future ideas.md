@@ -1,1 +1,63 @@
+# Ideas to add in the future.
 
+- 3D graphics [<sup>lwjgl</sup>](https://www.lwjgl.org/)
+- Car and people AI
+- Municipal services [<sup>Wikipedia</sup>](https://en.wikipedia.org/wiki/Municipal_services)
+  - Water and sewage
+  - Fire department
+  - Police
+  - Health
+    - Hospital
+    - Health department [<sup>Wikipedia</sup>](https://en.wikipedia.org/wiki/Health_department)
+  - Schools
+  - Electricity
+- Money
+  - Taxes
+- Public transport
+  - Tram
+  - Subway
+  - Bus
+- Terrain
+  - Height
+  - Tools:
+    - Lower Terrain
+    - Raise Terrain
+    - Level Terrain
+  - Water physics
+    - Goes a little higher with rain and other water sources (Water and sewage)
+    - Flows downhill
+  - Cliffs
+    - Physics
+      - Can collapse
+  - Ground hardness and strength
+    - Cliffs can collapse based on what is standing on them
+    - Bridges need "hard" terrain (they can't be placed anywhere)
+    - Max. building height on tile based on the groung parameters
+    - Diffrent road types have minimal terrain parameters
+- Roads and Paths
+  - Bridges
+  - Tunnels
+  - Dirt Roads
+  - Diagonal placement
+- Mouse support
+  - left button
+    - cursor position
+    - use menus, change settings, ...
+  - right button
+    - place
+  - scroll
+    - rotate
+  - `ctrl` + scroll
+    - change building height
+  - `alt` + scroll
+    - change type
+- In-game settings
+- Building types (zones)
+  - Commercial
+  - Residental
+  - Industrial
+- Random buildings
+  - roads + homes
+- Statistics
+  - city population
+  - players online ( in multiplayer )
