@@ -61,3 +61,4 @@
 - Statistics
   - city population
   - players online ( in multiplayer )
+- Daylight cycle
