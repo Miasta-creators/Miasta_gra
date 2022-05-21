@@ -1,5 +1,6 @@
 # Ideas to add in the future.
 
+- Smooth scrolling (changing chunks)
 - 3D graphics [<sup>lwjgl</sup>](https://www.lwjgl.org/)
 - Car and people AI
 - Municipal services [<sup>Wikipedia</sup>](https://en.wikipedia.org/wiki/Municipal_services)
