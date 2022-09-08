@@ -40,6 +40,7 @@
   - Tunnels
   - Dirt Roads
   - Diagonal placement
+    - (Freeform)
 - Mouse support
   - left button
     - cursor position
