@@ -63,3 +63,8 @@
   - city population
   - players online ( in multiplayer )
 - Daylight cycle
+- Construction simulation
+  - Requierments for building
+  - Construction zone
+  - Construction time
+  - Tools
